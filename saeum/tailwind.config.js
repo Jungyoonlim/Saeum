@@ -1,22 +1,7 @@
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+module.exports = {
+  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Tailwind scans these files for classes
   theme: {
-    extend: {
-      colors: {
-        primary: {
-          DEFAULT: '#222bb7',
-          light: '#333dd7',
-        }
-      },
-      fontFamily: {
-        sans: ['Instrument Sans', 'sans-serif'],
-      }
-    },
+    extend: {},
   },
   plugins: [],
-}
-
+};
