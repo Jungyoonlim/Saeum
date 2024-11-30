@@ -1,37 +1,38 @@
 export default function WelcomeCard() {
     return (
-      <div className="fixed inset-0 bg-white flex items-center justify-center">
-        {/* Aspect Ratio Wrapper */}
-        <div
-          className="relative"
-          style={{
-            width: '1364px',
-            height: '900px',
-            transform: 'scale(var(--scale-factor, 0.8))',
-            transformOrigin: 'center center'
-          }}
-        >
-          {/* Stacked Cards */}
-          <div className="absolute w-[321px] h-[416px] left-[521px] top-[242px] bg-[#222bb7]/75 shadow" />
-          <div className="absolute w-[321px] h-[416px] left-[521px] top-[224px] bg-[#222bb7]/70 shadow" />
-          <div className="absolute w-[321px] h-[416px] left-[521px] top-[204px] bg-[#222bb7]/75 shadow" />
-          <div className="absolute w-[321px] h-[416px] left-[521px] top-[185px] bg-[#222bb7] shadow" />
-  
-          {/* Logo Area */}
-          <div className="absolute w-[90px] h-[81px] left-[17px] top-[32px] bg-gray-300" />
-  
-          {/* Profile Circle */}
-          <div className="absolute w-[53px] h-[53px] left-[1278px] top-[32px] bg-[#d9d9d9] rounded-full" />
-  
-          {/* Rotated Card */}
-          <div className="absolute w-[441.04px] h-[505.27px] left-[440px] top-[153px]">
-            <div className="absolute w-[321px] h-[416px] left-[4px] top-[110.32px] origin-top-left rotate-[-21.82deg] bg-[#333dd7] shadow" />
-            <div className="absolute w-[221px] left-[157px] top-[421.36px] origin-top-left rotate-[-23.28deg] text-white text-xl font-normal font-['Instrument Sans']">
-              Welcome to<br />Saeum.
+      <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-[#222bb7] p-4">
+        {/* Main container with aspect ratio */}
+        <div className="w-full max-w-6xl aspect-[3/2] relative">
+          {/* Main white container */}
+          <div className="absolute inset-8 bg-[#f4f1f1] rounded-lg shadow-lg">
+            {/* Card stack container */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              {/* Stacked cards */}
+              <div className="relative w-[min(30vw,321px)] aspect-[321/416]">
+                <div className="absolute inset-0 bg-[#222bb7]/75 shadow translate-y-14" />
+                <div className="absolute inset-0 bg-[#222bb7]/70 shadow translate-y-10" />
+                <div className="absolute inset-0 bg-[#222bb7]/75 shadow translate-y-6" />
+                <div className="absolute inset-0 bg-[#222bb7] shadow" />
+              </div>
+              
+              {/* Rotated card with text */}
+              <div 
+                className="absolute top-0 -left-12 w-[min(30vw,321px)] aspect-[321/416]"
+                style={{ transform: 'rotate(-21.82deg)' }}
+              >
+                <div className="absolute inset-0 bg-[#333dd7] shadow" />
+                <div 
+                  className="absolute bottom-8 right-8 text-white text-xl font-normal"
+                  style={{ transform: 'rotate(-23.28deg)' }}
+                  aria-label="Welcome message"
+                >
+                  Welcome to<br/>Saeum.
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     )
-  }
+}
   
