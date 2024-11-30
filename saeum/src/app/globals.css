@@ -1,7 +1,9 @@
+/* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* CSS Variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -14,10 +16,13 @@
   }
 }
 
-html, body {
-  height: 100vh;
+/* Reset and Base Styles */
+html,
+body {
+  height: 100%;
   margin: 0;
   padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 body {
@@ -27,4 +32,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
