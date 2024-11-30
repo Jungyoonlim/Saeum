@@ -25,7 +25,7 @@ export default function WelcomeCard() {
             >
               <div className="absolute inset-0 bg-[#333dd7] shadow" />
               <div
-                className="absolute bottom-[8%] right-[8%] text-white text-xl font-normal font-['Instrument Sans']"
+                className="absolute bottom-[8%] right-[8%] text-white font-normal font-['Instrument Sans'] text-[1.5vw]"
                 style={{ transform: 'rotate(-23.28deg)' }}
               >
                 Welcome to<br/>Saeum.
