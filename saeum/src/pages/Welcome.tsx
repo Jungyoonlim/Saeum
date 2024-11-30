@@ -1,7 +1,6 @@
 //@ts-ignore
 import React from 'react'
 import WelcomeCard from '../components/welcome/WelcomeCard'
-// import WelcomeText from '../components/welcome/WelcomeText'
 // import Logo from '../components/welcome/Logo'
 
 
