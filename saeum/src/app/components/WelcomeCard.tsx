@@ -1,6 +1,6 @@
 export default function WelcomeCard() {
     return (
-      <div className="fixed inset-0 flex items-center justify-center overflow-hidden bg-[#222bb7] p-4">
+      <div className="min-h-screen flex items-center justify-center bg-[#222bb7] p-4">
         {/* Main container with aspect ratio */}
         <div className="w-full max-w-6xl aspect-[3/2] relative">
           {/* Main white container */}
