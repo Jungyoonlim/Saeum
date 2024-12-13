@@ -84,8 +84,8 @@ const createPaperTexture = (index: number) => {
   // Create composite texture based on card position in stack
   return {
     background: isPremium
-      ? 'linear-gradient(to bottom right, #fff 0%, #fafbff 100%)'
-      : 'linear-gradient(to bottom right, #fafbff 0%, #f8f9ff 100%)',
+      ? 'linear-gradient(to bottom right, #fffff5 0%, #fdfdf2 100%)'
+      : 'linear-gradient(to bottom right, #fdfdf2 0%, #fbfbef 100%)',
 
     // Layer multiple textures for depth
     textureLayers: [
@@ -96,16 +96,16 @@ const createPaperTexture = (index: number) => {
 
     // Refined border effect simulating paper edge
     border: isPremium
-      ? '1px solid rgba(255, 255, 255, 0.9)'
-      : '1px solid rgba(255, 255, 255, 0.7)',
+      ? '1px solid rgba(255, 253, 240, 0.9)'
+      : '1px solid rgba(255, 253, 240, 0.7)',
 
     // Subtle edge highlight
     edgeHighlight: `
       linear-gradient(
         to right,
         transparent,
-        rgba(255, 255, 255, ${0.15 - index * 0.01}) 10%,
-        rgba(255, 255, 255, ${0.15 - index * 0.01}) 90%,
+        rgba(255, 253, 240, ${0.15 - index * 0.01}) 10%,
+        rgba(255, 253, 240, ${0.15 - index * 0.01}) 90%,
         transparent
       )`,
   };
@@ -173,7 +173,7 @@ export default function WelcomeCard() {
   };
 
   // Handle drag
-  const handleDrag = (event: any, info: any, index: number) => {
+  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: any, index: number) => {
     const updatedPositions = [...cardPositions];
     updatedPositions[index] = {
       ...updatedPositions[index],
@@ -186,10 +186,17 @@ export default function WelcomeCard() {
   };
 
   // Handle drag end
-  const handleDragEnd = (event: any, info: any, index: number) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: any, index: number) => {
     setActiveCard(null);
     setIsDragging(false);
-    // Optionally, implement snapping or boundary logic here
+
+    const updatedPositions = [...cardPositions]
+    updatedPositions[index] = {
+      ...updatedPositions[index],
+      x: info.offset.x,
+      y: info.offset.y, 
+    }
+    setCardPositions(updatedPositions)
   };
 
   return (
