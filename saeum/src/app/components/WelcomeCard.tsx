@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Shuffle } from 'lucide-react';
 
 interface CardPosition {
@@ -11,13 +11,6 @@ interface CardPosition {
   zIndex: number;
   scale: number;
   shadowOpacity: number;
-}
-
-interface CardStyle {
-  background: string;
-  textureLayers: string[];
-  border: string;
-  edgeHighlight: string;
 }
 
 const createPaperTexture = (index: number) => {
@@ -172,15 +165,13 @@ export default function WelcomeCard() {
     setIsDragging(true);
   };
 
-  // Handle drag
-  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: any, index: number) => {
+  // Simplified drag handling
+  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, index: number) => {
     const updatedPositions = [...cardPositions];
     updatedPositions[index] = {
       ...updatedPositions[index],
-      x: info.point.x - window.innerWidth / 2 +  // Adjust for centering
-         (window.innerWidth * 0.95 * 0.235) / 2, // Adjust based on card width
-      y: info.point.y - window.innerHeight / 2 + // Adjust for centering
-         (window.innerHeight * 0.925 * 0.235) / 2, // Adjust based on card height
+      x: info.offset.x,
+      y: info.offset.y,
     };
     setCardPositions(updatedPositions);
   };
@@ -232,28 +223,33 @@ export default function WelcomeCard() {
                     style={{
                       zIndex: position?.zIndex || cards.length - index,
                     }}
-                    initial={{
-                      rotate: -index * 0.3,
-                      opacity: 0,
-                      scale: 0.95,
-                    }}
+                    initial={false}
                     animate={{
                       x: position?.x || Math.min(index * 1.5, 30),
                       y: position?.y || Math.min(index * 1.5, 30),
                       rotate: position?.rotate || -index * 0.3,
-                      opacity: 1,
                       scale: position?.scale || 1 - index * 0.001,
                     }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 400,
-                      damping: 40,
-                    }}
                     drag
+                    dragSnapToOrigin={false}
+                    dragElastic={0}
                     dragMomentum={false}
+                    dragTransition={{
+                      power: 0,
+                      timeConstant: 0,
+                      modifyTarget: (target: number) => Math.round(target)
+                    }}
+                    transition={{
+                      duration: 0,
+                      type: "tween"
+                    }}
+                    whileDrag={{ 
+                      scale: 1.02,
+                      transition: { duration: 0.1 }
+                    }}
                     onDragStart={() => handleDragStart(index)}
-                    onDrag={(e, info) => handleDrag(e, info, index)}
-                    onDragEnd={(e, info) => handleDragEnd(e, info, index)}
+                    onDrag={(e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => handleDrag(e, info, index)}
+                    onDragEnd={(e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => handleDragEnd(e, info, index)}
                   >
                     {/* Card Background with Textures */}
                     <motion.div
