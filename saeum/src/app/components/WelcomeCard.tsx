@@ -107,9 +107,7 @@ const createPaperTexture = (index: number) => {
 
 export default function WelcomeCard() {
   const [cardPositions, setCardPositions] = useState<CardPosition[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [activeCard, setActiveCard] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [isShuffling, setIsShuffling] = useState(false);
 
   // Initialize cards with content and styles
@@ -122,7 +120,6 @@ export default function WelcomeCard() {
 
   // Initialize stack with refined visual depth
   useEffect(() => {
-    setIsLoaded(true);
     initializeStack();
   }, []);
 
@@ -162,7 +159,6 @@ export default function WelcomeCard() {
   // Handle drag start
   const handleDragStart = (index: number) => {
     setActiveCard(index);
-    setIsDragging(true);
   };
 
   // Simplified drag handling
@@ -177,17 +173,16 @@ export default function WelcomeCard() {
   };
 
   // Handle drag end
-  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: any, index: number) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, index: number) => {
     setActiveCard(null);
-    setIsDragging(false);
 
-    const updatedPositions = [...cardPositions]
+    const updatedPositions = [...cardPositions];
     updatedPositions[index] = {
       ...updatedPositions[index],
       x: info.offset.x,
-      y: info.offset.y, 
-    }
-    setCardPositions(updatedPositions)
+      y: info.offset.y,
+    };
+    setCardPositions(updatedPositions);
   };
 
   return (
