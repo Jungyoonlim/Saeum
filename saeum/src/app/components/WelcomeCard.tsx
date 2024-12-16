@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Shuffle } from 'lucide-react';
 
@@ -13,27 +13,21 @@ interface CardPosition {
   shadowOpacity: number;
 }
 
-const createPaperTexture = (index: number) => {
-  // Define base characteristics for different types of premium paper effects
+const createPaperTexture = useMemo(() => (index: number) => {
   const paperTypes = {
     premium: {
-      // Cotton paper effect - subtle texture with a soft, natural feel
       grain: `repeating-linear-gradient(
         ${45 + (index % 2) * 90}deg,
         rgba(248, 249, 252, 0.3) 0px,
         rgba(252, 253, 255, 0.3) 1px,
         rgba(248, 249, 252, 0.2) 2px
       )`,
-
-      // Soft light interaction similar to cotton fiber paper
       highlight: `radial-gradient(
         circle at ${50 + Math.sin(index) * 20}% ${50 + Math.cos(index) * 20}%,
         rgba(255, 255, 255, 0.8) 0%,
         rgba(255, 255, 255, 0.2) 45%,
         transparent 65%
       )`,
-
-      // Subtle surface variations like handmade paper
       surface: `linear-gradient(
         ${index * 30}deg,
         rgba(244, 245, 250, 0.05) 0%,
@@ -44,24 +38,18 @@ const createPaperTexture = (index: number) => {
         rgba(250, 251, 255, 0.1) 100%
       )`,
     },
-
     matte: {
-      // More uniform, smooth texture like museum-quality paper
       grain: `repeating-radial-gradient(
         circle at ${50 + (index % 3) * 25}% ${50 + (index % 2) * 25}%,
         rgba(250, 251, 255, 0.2) 0px,
         rgba(248, 249, 252, 0.1) 1px,
         transparent 2px
       )`,
-
-      // Linear gradient highlight
       highlight: `linear-gradient(
         ${-45 + index * 2}deg,
         rgba(255, 255, 255, 0.4) 0%,
         transparent 60%
       )`,
-
-      // Surface variation layer
       surface: `linear-gradient(
         to right,
         rgba(248, 249, 252, 0.05) 0%,
@@ -70,6 +58,7 @@ const createPaperTexture = (index: number) => {
       )`,
     },
   };
+
 
   // Determine paper type based on index (e.g., first card is premium)
   const isPremium = index === 0;
