@@ -91,7 +91,7 @@ const createPaperTexture = useMemo(() => (index: number) => {
         transparent
       )`,
   };
-};
+})
 
 
 export default function WelcomeCard() {
