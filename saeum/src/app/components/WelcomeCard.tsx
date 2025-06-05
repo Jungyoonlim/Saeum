@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { Shuffle } from 'lucide-react';
 
@@ -13,7 +13,7 @@ interface CardPosition {
   shadowOpacity: number;
 }
 
-const createPaperTexture = useMemo(() => (index: number) => {
+const createPaperTexture = (index: number) => {
   const paperTypes = {
     premium: {
       grain: `repeating-linear-gradient(
@@ -59,7 +59,6 @@ const createPaperTexture = useMemo(() => (index: number) => {
     },
   };
 
-
   // Determine paper type based on index (e.g., first card is premium)
   const isPremium = index === 0;
 
@@ -91,28 +90,23 @@ const createPaperTexture = useMemo(() => (index: number) => {
         transparent
       )`,
   };
-})
-
+};
 
 export default function WelcomeCard() {
   const [cardPositions, setCardPositions] = useState<CardPosition[]>([]);
   const [activeCard, setActiveCard] = useState<number | null>(null);
   const [isShuffling, setIsShuffling] = useState(false);
 
-  // Initialize cards with content and styles
-  const cards = Array.from({ length: 30 }, (_, i) => ({
+  // Reduce number of cards to improve performance
+  const cards = useMemo(() => Array.from({ length: 8 }, (_, i) => ({
     id: i + 1,
     content: i === 0 ? "Welcome to\nSaeum" : `Flashcard ${i + 1}`,
     subtext: i === 0 ? "Your personal study companion" : `Card ${i + 1} description`,
     style: createPaperTexture(i),
-  }));
+  })), []);
 
   // Initialize stack with refined visual depth
-  useEffect(() => {
-    initializeStack();
-  }, []);
-
-  const initializeStack = (randomize: boolean = false) => {
+  const initializeStack = useCallback((randomize: boolean = false) => {
     let positions = cards.map((_, index) => {
       const baseOffset = Math.min(index * 1.5, 30); // More subtle offset
       return {
@@ -135,44 +129,39 @@ export default function WelcomeCard() {
     }
 
     setCardPositions(positions);
-  };
+  }, [cards]);
+
+  useEffect(() => {
+    initializeStack();
+  }, [initializeStack]);
 
   // Handle shuffling of the deck
-  const shuffleDeck = () => {
+  const shuffleDeck = useCallback(() => {
     if (isShuffling) return;
     setIsShuffling(true);
     initializeStack(true);
-    setTimeout(() => setIsShuffling(false), 1000); // Adjust duration as needed
-  };
+    setTimeout(() => setIsShuffling(false), 1000);
+  }, [isShuffling, initializeStack]);
 
   // Handle drag start
-  const handleDragStart = (index: number) => {
+  const handleDragStart = useCallback((index: number) => {
     setActiveCard(index);
-  };
+  }, []);
 
-  // Simplified drag handling
-  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, index: number) => {
-    const updatedPositions = [...cardPositions];
-    updatedPositions[index] = {
-      ...updatedPositions[index],
-      x: info.offset.x,
-      y: info.offset.y,
-    };
-    setCardPositions(updatedPositions);
-  };
-
-  // Handle drag end
-  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, index: number) => {
+  // Simplified drag handling - only update on drag end to reduce performance issues
+  const handleDragEnd = useCallback((_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo, index: number) => {
     setActiveCard(null);
 
-    const updatedPositions = [...cardPositions];
-    updatedPositions[index] = {
-      ...updatedPositions[index],
-      x: info.offset.x,
-      y: info.offset.y,
-    };
-    setCardPositions(updatedPositions);
-  };
+    setCardPositions(prev => {
+      const updated = [...prev];
+      updated[index] = {
+        ...updated[index],
+        x: info.offset.x,
+        y: info.offset.y,
+      };
+      return updated;
+    });
+  }, []);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-[#0B0B0F] overflow-hidden">
@@ -216,23 +205,20 @@ export default function WelcomeCard() {
                     }}
                     drag
                     dragSnapToOrigin={false}
-                    dragElastic={0}
+                    dragElastic={0.1}
                     dragMomentum={false}
-                    dragTransition={{
-                      power: 0,
-                      timeConstant: 0,
-                      modifyTarget: (target: number) => Math.round(target)
-                    }}
                     transition={{
-                      duration: 0,
-                      type: "tween"
+                      duration: 0.2,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30
                     }}
                     whileDrag={{ 
                       scale: 1.02,
+                      zIndex: 1000,
                       transition: { duration: 0.1 }
                     }}
                     onDragStart={() => handleDragStart(index)}
-                    onDrag={(e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => handleDrag(e, info, index)}
                     onDragEnd={(e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => handleDragEnd(e, info, index)}
                   >
                     {/* Card Background with Textures */}
